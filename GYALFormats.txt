@@ -1,0 +1,84 @@
+Stream format:
+
+%00XXXXXX -> New note:
+	X = note number
+	(for noise channel, the next byte will be used for polynomial ($FF22) )
+%01XXXXXX -> Empty rows:
+	X = no. of empty rows
+%10A-ZXYY -> New envelope: 
+	A = set to 1 if there is another instruction this row
+	Z = 1 for envelope on, 0 for envelope off
+	X = 1 for looping envelope, 0 for no loop
+	Y = No. of envelope (see envelope list below)
+	Next two bytes = address of envelope
+%11XAYY-- -> Set duty/vol env or volume(for wave):
+	A = set to 1 if there is another instruction this row
+	X = 1 for duty, 0 for volume envelope
+	Y = duty value, or volume value for wave channel
+%111AYYYY -> Set new wavetable, wave channel only
+	A = set to 1 if there is another instruction this row
+	Y = wavetable number
+%00000000 -> Note off
+%11111111 -> Jump:
+	Next two bytes = New address
+
+Start of stream:
+
+The first 11 bytes of the music stream should be (in this order)
+
+Song Speed (the higher the number the slower)
+Channel 1 stream address
+Channel 2 stream address
+Channel 3 stream address
+Channel 4 stream address
+Wavetable list address
+
+Envelope list:
+
+Channel 1+2:
+1. Pitch 
+2. Duty 
+3. Arpeggio
+
+Channel 3:
+1. Pitch
+2. Volume
+3. Arpeggio
+
+Channel 4:
+NONE
+
+Envelope format:
+
+%0XXXXXXX -> Repeats:
+	X = Number of repeats of previous value
+%01111111 -> End of Envelope
+%1XXXXXXX -> Output value:
+	X = Value
+%1YXXXXXX -> Output value for pitch envelope only:
+	Y = Sign bit
+
+SFX format:
+
+%0000XXXX -> Register number (see below), next byte is the data for that register
+%xxxxxxxx -> Number of empty frames, nibbles are swapped (cannot be $FF)
+%11111111 -> End of stream
+
+Register numbers:
+
+0. $FF11
+1. $FF12
+2. $FF13
+3. $FF14
+4. $FF16
+5. $FF17
+6. $FF18
+7. $FF19
+8. $FF1B
+9. $FF1C
+A. $FF1D
+B. $FF1E
+C. $FF20
+D. $FF21
+E. $FF22
+F. $FF23
