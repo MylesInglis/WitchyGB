@@ -61,7 +61,7 @@ Begin:
 	call ScrollInit
 	
 	xor a
-	ld hl, OAMBuf
+	ld hl, OAM_PLAYER
 	ld bc, 40 * 4
 	call mem_Set
 	
@@ -123,7 +123,7 @@ VBlankHandler:
 	reti
 	
 SpriteDMAROM:
-	ld a, OAMBuf >> 8
+	ld a, OAM_PLAYER >> 8
 	ld [rDMA], a
 	ld a, $28
 .wait

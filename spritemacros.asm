@@ -1,23 +1,25 @@
 ;1 - Metasprite address
+;2 - OAM buffer location
 SpriteUpdate: MACRO
 	ld a, [\1 + METASPRITE_ATR]
 	or a
 	jr z, .noflip\@
 .flip\@
-	SpriteUpdateFlip \1
+	SpriteUpdateFlip \1, \2
 	jr .end\@
 .noflip\@
-	SpriteUpdateNoFlip \1
+	SpriteUpdateNoFlip \1, \2
 .end\@
 	ENDM
 	
 ;1 - Metasprite address
+;2 - OAM buffer location
 SpriteUpdateNoFlip: MACRO
 	ld a, [\1 + METASPRITE_W]
 	ld b, a
 	ld a, [\1 + METASPRITE_H]
 	ld c, a
-	ld hl, OAMBuf
+	ld hl, \2
 	ld a, [\1 + METASPRITE_X]
 	ld d, a
 	ld a, [\1 + METASPRITE_Y]
@@ -56,6 +58,7 @@ SpriteUpdateNoFlip: MACRO
 	ENDM
 	
 ;1 - Metasprite address
+;2 - OAM buffer location
 SpriteUpdateFlip: MACRO
 	ld a, [\1 + METASPRITE_START_TILE]
 	ld b, a
@@ -67,7 +70,7 @@ SpriteUpdateFlip: MACRO
 	ld b, a
 	ld a, [\1 + METASPRITE_H]
 	ld c, a
-	ld hl, OAMBuf
+	ld hl, \2
 	ld a, [\1 + METASPRITE_X]
 	ld d, a
 	ld a, [\1 + METASPRITE_Y]
