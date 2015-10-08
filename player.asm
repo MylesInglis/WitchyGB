@@ -91,7 +91,7 @@ PlayerMove:
 	ld [PLAYER_XVEL], a
 	ld b, a
 .noboundary
-	call SpriteMove
+	SpriteMove SPRITE_PLAYER
 	ld a, [PLAYER_YVEL]
 	bit 7, a
 	jr nz, .checkalive

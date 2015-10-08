@@ -183,7 +183,7 @@ ScrollRight:
 	ld b, a
 	xor a
 	ld c, a
-	call SpriteMove
+	call SpriteMoveAll
 	ld a, [SCROLL_COUNTER]
 	add d
 	cp SCROLL_COUNT_MAX
@@ -210,7 +210,7 @@ ScrollRight:
 	ld b, a
 	xor a
 	ld c, a
-	call SpriteMove
+	call SpriteMoveAll
 	ld a, [SCROLL_COUNTER]
 	add d
 	ld [SCROLL_COUNTER], a
@@ -231,7 +231,7 @@ ScrollLeft:
 	ld b, a
 	xor a
 	ld c, a
-	call SpriteMove
+	call SpriteMoveAll
 	ld a, [SCROLL_COUNTER]
 	sub d
 	cp 0
@@ -258,7 +258,7 @@ ScrollLeft:
 	ld b, a
 	xor a
 	ld c, a
-	call SpriteMove
+	call SpriteMoveAll
 	ld a, [SCROLL_COUNTER]
 	sub d
 	ld [SCROLL_COUNTER], a
@@ -279,7 +279,7 @@ ScrollUp:
 	ld c, a
 	xor a
 	ld b, a
-	call SpriteMove
+	call SpriteMoveAll
 .end
 	ret
 
@@ -295,7 +295,7 @@ ScrollDown:
 	ld c, a
 	xor a
 	ld b, a
-	call SpriteMove
+	call SpriteMoveAll
 .end
 	ret
 	

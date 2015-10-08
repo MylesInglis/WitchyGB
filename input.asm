@@ -1,4 +1,5 @@
 PLAYER_JUMP_VEL EQU %10000100
+PLAYER_JUMP_DOWN_VEL EQU %00000010
 PLAYER_WALK_VEL EQU 2
 RIGHT_SCROLL_OFFSET_MIN EQU 50
 RIGHT_SCROLL_OFFSET_MAX EQU RIGHT_SCROLL_OFFSET_MIN + PLAYER_WALK_VEL + 1
@@ -66,19 +67,31 @@ GetInput:
 	ret
 	
 HandleInput:
-.sfx1
+.jumpbutton
 	ld a, [INPUT_ON]
 	bit 0, a
 	jr z, .sfx2
 	ld a, [PLAYER_ON_FLOOR]
 	or a
 	jr z, .sfx2
+	ld a, [INPUT]
+	bit 7, a
+	jr z, .jump
+	jr .jumpdown
 .jump
 	ld hl, SFX2
 	ld a, 0
 	call GyalSFXPlay
 	ld a, PLAYER_JUMP_VEL
 	ld [PLAYER_YVEL], a
+	xor a
+	ld [GRAVITY_COUNTER], a
+	ld [PLAYER_ON_FLOOR], a
+	jr .sfx2
+.jumpdown
+	ld a, [SPRITE_PLAYER + METASPRITE_Y]
+	inc a
+	ld [SPRITE_PLAYER + METASPRITE_Y], a
 	xor a
 	ld [GRAVITY_COUNTER], a
 	ld [PLAYER_ON_FLOOR], a

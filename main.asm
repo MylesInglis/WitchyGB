@@ -96,8 +96,8 @@ Main:
 	call PlayerMove
 	call PlayerAnim
 	call CameraFollow
-	call SpriteAnim
-	call SpriteUpdate
+	call SpriteAnimAll
+	call SpriteUpdateAll
 	call GyalUpdate
 	
 	ld a, [PLAYER_DEAD]
