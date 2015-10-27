@@ -3,7 +3,7 @@ Original platformer game for the GameBoy, programmed in Assembly.
 
 ## Screenshots
 
-![](http://invadrsoft.co.uk/witchy1.png) ![](http://invadrsoft.co.uk/witchy2.png)
+![](http://invadrsoft.co.uk/img/witchy1.png) ![](http://invadrsoft.co.uk/img/witchy2.png)
 
 ## Information
 
