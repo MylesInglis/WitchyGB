@@ -1,3 +1,5 @@
+INCLUDE "inputmacros.asm"
+
 PLAYER_JUMP_VEL EQU %10000100
 PLAYER_JUMP_DOWN_VEL EQU %00000010
 PLAYER_WALK_VEL EQU 2
@@ -70,14 +72,21 @@ HandleInput:
 .jumpbutton
 	ld a, [INPUT_ON]
 	bit 0, a
-	jr z, .sfx2
+	jp z, .sfx2
 	ld a, [PLAYER_ON_FLOOR]
 	or a
-	jr z, .sfx2
+	jp z, .sfx2
 	ld a, [INPUT]
 	bit 7, a
 	jr z, .jump
-	jr .jumpdown
+	;check below tiles for ground
+	CheckBelowTile 1
+	CheckBelowTile 2
+	CheckBelowTile 3
+	CheckBelowTile 4
+	CheckBelowTile 5
+	;if no floor found
+	jr .sfx2
 .jump
 	ld hl, SFX2
 	ld a, 0
