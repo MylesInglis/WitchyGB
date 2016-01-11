@@ -48,7 +48,7 @@ Begin:
 	
 	ld hl, Tiles
 	ld de, _VRAM
-	ld bc, 16*68
+	ld bc, 16*77
 	call mem_CopyVRAM
 	
 	ld a, 6

@@ -195,6 +195,11 @@ PlayerJumpAnim: MACRO
 	SpriteAnimStart SPRITE_PLAYER, PLAYER_ANIM, PLAYER_ANIM_JUMP_START, PLAYER_ANIM_JUMP_END, PLAYER_ANIM_JUMP
 	ENDM
 	
+PlayerFireAnim: MACRO
+	ld a, 2
+	SpriteAnimStart SPRITE_PLAYER, PLAYER_ANIM, PLAYER_ANIM_FIRE_START, PLAYER_ANIM_FIRE_END, PLAYER_ANIM_FIRE
+	ENDM
+	
 ;in: b - x movement
 ;    c - y movement
 ;1 - Metasprite address

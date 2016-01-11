@@ -5,7 +5,6 @@ TERMINAL_VEL EQU 3
 TOP_SCROLL_OFFSET EQU 50
 BOTTOM_SCROLL_OFFSET EQU SCRN_Y - TOP_SCROLL_OFFSET
 
-
 SECTION "Player Variables", BSS
 
 PLAYER_YVEL : DS 1
@@ -13,6 +12,7 @@ PLAYER_XVEL : DS 1
 GRAVITY_COUNTER : DS 1
 PLAYER_ON_FLOOR : DS 1
 PLAYER_DEAD : DS 1
+PLAYER_FIRE_COUNTER : DS 1
 
 SECTION "Player Code", HOME
 
@@ -23,6 +23,7 @@ PlayerInit:
 	ld [GRAVITY_COUNTER], a
 	ld [PLAYER_ON_FLOOR], a
 	ld [PLAYER_DEAD], a
+	ld [PLAYER_FIRE_COUNTER], a
 	ret
 
 PlayerMove:
@@ -145,6 +146,14 @@ PlayerMove:
 	ret
 	
 PlayerAnim:
+	ld a, [PLAYER_FIRE_COUNTER]
+	or a
+	jr z, .checkmove
+	dec a
+	ld [PLAYER_FIRE_COUNTER], a
+	PlayerFireAnim
+	jp .onground
+.checkmove
 	ld a, [PLAYER_XVEL]
 	or a
 	jr z, .notmoving
