@@ -5,6 +5,9 @@ TERMINAL_VEL EQU 3
 TOP_SCROLL_OFFSET EQU 50
 BOTTOM_SCROLL_OFFSET EQU SCRN_Y - TOP_SCROLL_OFFSET
 
+PROJECTILE_SPEED EQU 4
+PROJECTILE_LIFE EQU 22
+
 SECTION "Player Variables", BSS
 
 PLAYER_YVEL : DS 1
@@ -13,6 +16,9 @@ GRAVITY_COUNTER : DS 1
 PLAYER_ON_FLOOR : DS 1
 PLAYER_DEAD : DS 1
 PLAYER_FIRE_COUNTER : DS 1
+PLAYER_PROJECTILES : DS 1
+PLAYER_PROJECTILE1_LIFE : DS 1
+PLAYER_PROJECTILE2_LIFE : DS 1
 
 SECTION "Player Code", HOME
 
@@ -24,6 +30,119 @@ PlayerInit:
 	ld [PLAYER_ON_FLOOR], a
 	ld [PLAYER_DEAD], a
 	ld [PLAYER_FIRE_COUNTER], a
+	ld [PLAYER_PROJECTILES], a
+	ld [PLAYER_PROJECTILE1_LIFE], a
+	ld [PLAYER_PROJECTILE2_LIFE], a
+	ret
+	
+FireProjectile:
+	ld a, [PLAYER_PROJECTILE1_LIFE]
+	or a
+	jr z, .spawnproj1
+	ld a, [PLAYER_PROJECTILE2_LIFE]
+	or a
+	jp z, .spawnproj2
+	jp .nofire
+.spawnproj1
+	ld a, PROJECTILE_LIFE
+	ld [PLAYER_PROJECTILE1_LIFE], a
+	ld a, [SPRITE_PLAYER + METASPRITE_Y]
+	add a, 11
+	ld [SPRITE_PLAYER_PROJECTILE1 + METASPRITE_Y], a
+	ld a, [SPRITE_PLAYER + METASPRITE_ATR]
+	or a
+	jr z, .proj1right
+	PlayerProjectile1LeftAnim
+	ld a, [SPRITE_PLAYER + METASPRITE_X]
+	sub a, 4
+	ld [SPRITE_PLAYER_PROJECTILE1 + METASPRITE_X], a
+	jp .end
+.proj1right
+	PlayerProjectile1RightAnim
+	ld a, [SPRITE_PLAYER + METASPRITE_X]
+	add a, 20
+	ld [SPRITE_PLAYER_PROJECTILE1 + METASPRITE_X], a
+	jp .end
+.spawnproj2
+	ld a, PROJECTILE_LIFE
+	ld [PLAYER_PROJECTILE2_LIFE], a
+	ld a, [SPRITE_PLAYER + METASPRITE_Y]
+	add a, 11
+	ld [SPRITE_PLAYER_PROJECTILE2 + METASPRITE_Y], a
+	ld a, [SPRITE_PLAYER + METASPRITE_ATR]
+	or a
+	jr z, .proj2right
+	PlayerProjectile2LeftAnim
+	ld a, [SPRITE_PLAYER + METASPRITE_X]
+	sub a, 4
+	ld [SPRITE_PLAYER_PROJECTILE2 + METASPRITE_X], a
+	jr .end
+.proj2right
+	PlayerProjectile2RightAnim
+	ld a, [SPRITE_PLAYER + METASPRITE_X]
+	add a, 20
+	ld [SPRITE_PLAYER_PROJECTILE2 + METASPRITE_X], a
+	jr .end
+.end
+	ld a, FIRE_ANIM_TIME
+	ld [PLAYER_FIRE_COUNTER], a
+	ld hl, SFX3
+	ld a, 0
+	call GyalSFXPlay
+.nofire
+	ret
+	
+UpdateProjectiles:
+	ld a, [PLAYER_PROJECTILE1_LIFE]
+	or a
+	jr z, .killproj1
+	xor a
+	ld c, a
+	ld a, [PLAYER_PROJECTILE1_ANIM + ANIM_ID]
+	cp PLAYER_PROJECTILE_ANIM_LEFT
+	jr z, .proj1left
+	ld a, PROJECTILE_SPEED
+	ld b, a
+	jr .move1
+.proj1left
+	ld a, PROJECTILE_SPEED
+	set 7, a
+	ld b, a
+.move1
+	SpriteMove SPRITE_PLAYER_PROJECTILE1
+	ld a, [PLAYER_PROJECTILE1_LIFE]
+	dec a
+	ld [PLAYER_PROJECTILE1_LIFE], a
+	jr .proj2
+.killproj1
+	xor a
+	ld [SPRITE_PLAYER_PROJECTILE1 + METASPRITE_Y], a
+.proj2
+	ld a, [PLAYER_PROJECTILE2_LIFE]
+	or a
+	jr z, .killproj2
+	xor a
+	ld c, a
+	ld a, [PLAYER_PROJECTILE2_ANIM + ANIM_ID]
+	cp PLAYER_PROJECTILE_ANIM_LEFT
+	jr z, .proj2left
+	ld a, PROJECTILE_SPEED
+	ld b, a
+	jr .move2
+.proj2left
+	ld a, PROJECTILE_SPEED
+	set 7, a
+	ld b, a
+.move2
+	SpriteMove SPRITE_PLAYER_PROJECTILE2
+	ld a, [PLAYER_PROJECTILE2_LIFE]
+	dec a
+	ld [PLAYER_PROJECTILE2_LIFE], a
+	jr .end
+.killproj2
+	xor a
+	ld [SPRITE_PLAYER_PROJECTILE2 + METASPRITE_Y], a
+.end
 	ret
 
 PlayerMove:

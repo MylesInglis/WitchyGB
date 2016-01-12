@@ -48,7 +48,7 @@ Begin:
 	
 	ld hl, Tiles
 	ld de, _VRAM
-	ld bc, 16*77
+	ld bc, 16*88
 	call mem_CopyVRAM
 	
 	ld a, 6
@@ -77,9 +77,11 @@ Begin:
 
 	call InputInit
 	call PlayerInit
-	call SpriteInit
+	call SpriteInitAll
 	
 	PlayerIdleAnim
+	PlayerProjectile1RightAnim
+	PlayerProjectile2LeftAnim
 	
 Main:
 	halt
@@ -93,6 +95,7 @@ Main:
 	
 	call GetInput
 	call HandleInput
+	call UpdateProjectiles
 	call PlayerMove
 	call PlayerAnim
 	call CameraFollow

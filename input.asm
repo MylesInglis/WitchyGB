@@ -110,11 +110,7 @@ HandleInput:
 	ld a, [INPUT_ON]
 	bit 1, a
 	jr z, .scrollleft
-	ld a, FIRE_ANIM_TIME
-	ld [PLAYER_FIRE_COUNTER], a
-	ld hl, SFX3
-	ld a, 0
-	call GyalSFXPlay
+	call FireProjectile
 .scrollleft
 	ld a, [INPUT]
 	bit 5, a

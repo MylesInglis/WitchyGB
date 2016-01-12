@@ -1,4 +1,29 @@
 ;1 - Metasprite address
+;2 - Animation data address
+;3 - Start X
+;4 - Start Y
+;5 - Width in sprites
+;6 - Height in sprites
+;7 - First sprite index
+SpriteInit: MACRO
+	xor a
+	ld [\2 + ANIM_COUNTER], a
+	ld [\1 + METASPRITE_ATR], a
+	ld a, \3
+	ld [\1 + METASPRITE_X], a
+	ld a, \4
+	ld [\1 + METASPRITE_Y], a
+	ld a, \5
+	ld [\1 + METASPRITE_W], a
+	ld a, \6
+	ld [\1 + METASPRITE_H], a
+	ld a, \5 * \6
+	ld [\1 + METASPRITE_WxH], a
+	ld a, \7
+	ld [\1 + METASPRITE_START_TILE], a
+	ENDM
+
+;1 - Metasprite address
 ;2 - OAM buffer location
 SpriteUpdate: MACRO
 	ld a, [\1 + METASPRITE_ATR]
@@ -122,11 +147,11 @@ SpriteAnimStart: MACRO
 	jr z, .noflip\@
 .flip\@
 	ld a, OAMF_XFLIP
-	ld [SPRITE_PLAYER + METASPRITE_ATR], a
+	ld [\1 + METASPRITE_ATR], a
 	jr .cont\@
 .noflip\@
 	xor a
-	ld [SPRITE_PLAYER + METASPRITE_ATR], a
+	ld [\1 + METASPRITE_ATR], a
 .cont\@
 	ld a, \3
 	ld b, a
@@ -198,6 +223,26 @@ PlayerJumpAnim: MACRO
 PlayerFireAnim: MACRO
 	ld a, 2
 	SpriteAnimStart SPRITE_PLAYER, PLAYER_ANIM, PLAYER_ANIM_FIRE_START, PLAYER_ANIM_FIRE_END, PLAYER_ANIM_FIRE
+	ENDM
+	
+PlayerProjectile1RightAnim: MACRO
+	xor a
+	SpriteAnimStart SPRITE_PLAYER_PROJECTILE1, PLAYER_PROJECTILE1_ANIM, PLAYER_PROJECTILE_ANIM_START, PLAYER_PROJECTILE_ANIM_END, PLAYER_PROJECTILE_ANIM_RIGHT
+	ENDM
+	
+PlayerProjectile1LeftAnim: MACRO
+	ld a, 1
+	SpriteAnimStart SPRITE_PLAYER_PROJECTILE1, PLAYER_PROJECTILE1_ANIM, PLAYER_PROJECTILE_ANIM_START, PLAYER_PROJECTILE_ANIM_END, PLAYER_PROJECTILE_ANIM_LEFT
+	ENDM
+	
+PlayerProjectile2RightAnim: MACRO
+	xor a
+	SpriteAnimStart SPRITE_PLAYER_PROJECTILE2, PLAYER_PROJECTILE2_ANIM, PLAYER_PROJECTILE_ANIM_START, PLAYER_PROJECTILE_ANIM_END, PLAYER_PROJECTILE_ANIM_RIGHT
+	ENDM
+	
+PlayerProjectile2LeftAnim: MACRO
+	ld a, 1
+	SpriteAnimStart SPRITE_PLAYER_PROJECTILE2, PLAYER_PROJECTILE2_ANIM, PLAYER_PROJECTILE_ANIM_START, PLAYER_PROJECTILE_ANIM_END, PLAYER_PROJECTILE_ANIM_LEFT
 	ENDM
 	
 ;in: b - x movement
