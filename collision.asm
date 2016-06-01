@@ -11,23 +11,21 @@ SECTION "Collision Code", HOME
 ;	  c - sprite y
 ;out: b - converted x
 ;	  c - converted y
-
-SpritePosToBackgroundPos:
+SpritePosToBackgroundPos: MACRO
 	ld a, [rSCX]
 	add b
 	ld b, a
 	ld a, [rSCY]
 	add c
 	ld c, a
-	ret
+	ENDM
 	
 ;in:  b - sprite x
 ;	  c - sprite y
 ;out: a - 1 for collision, 0 for no collision
 ;	  hl - address of tile
-
 CheckWorldCollision:
-	call SpritePosToBackgroundPos
+	SpritePosToBackgroundPos
 	
 	;get tile x - divide by 8, put in hl
 	xor a
