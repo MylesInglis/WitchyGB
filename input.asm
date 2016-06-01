@@ -74,10 +74,10 @@ HandleInput:
 .jumpbutton
 	ld a, [INPUT_ON]
 	bit 0, a
-	jp z, .sfx2
+	jp z, .fire
 	ld a, [PLAYER_ON_FLOOR]
 	or a
-	jp z, .sfx2
+	jp z, .fire
 	ld a, [INPUT]
 	bit 7, a
 	jr z, .jump
@@ -88,7 +88,7 @@ HandleInput:
 	CheckBelowTile 4
 	CheckBelowTile 5
 	;if no floor found
-	jr .sfx2
+	jr .fire
 .jump
 	ld hl, SFX2
 	ld a, 0
@@ -98,7 +98,7 @@ HandleInput:
 	xor a
 	ld [GRAVITY_COUNTER], a
 	ld [PLAYER_ON_FLOOR], a
-	jr .sfx2
+	jr .fire
 .jumpdown
 	ld a, [SPRITE_PLAYER + METASPRITE_Y]
 	inc a
@@ -106,7 +106,7 @@ HandleInput:
 	xor a
 	ld [GRAVITY_COUNTER], a
 	ld [PLAYER_ON_FLOOR], a
-.sfx2
+.fire
 	ld a, [INPUT_ON]
 	bit 1, a
 	jr z, .scrollleft
