@@ -101,10 +101,10 @@ Main:
 	
 	call GetInput
 	call HandleInput
-	call UpdateProjectiles
 	call PlayerMove
 	call PlayerAnim
 	call EnemyActAll
+	call UpdateProjectiles
 	call CameraFollow
 	call SpriteAnimAll
 	call SpriteUpdateAll
