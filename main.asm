@@ -3,6 +3,7 @@ INCLUDE "input.asm"
 INCLUDE "scroll.asm"
 INCLUDE "collision.asm"
 INCLUDE "player.asm"
+INCLUDE "enemy.asm"
 INCLUDE "gyal.asm"
 INCLUDE "lvl1data.asm"
 
@@ -48,7 +49,7 @@ Begin:
 	
 	ld hl, Tiles
 	ld de, _VRAM
-	ld bc, 16*88
+	ld bc, 16 * 142
 	call mem_CopyVRAM
 	
 	ld a, 6
@@ -77,11 +78,16 @@ Begin:
 
 	call InputInit
 	call PlayerInit
+	call EnemyInitAll
 	call SpriteInitAll
 	
 	PlayerIdleAnim
-	PlayerProjectile1RightAnim
-	PlayerProjectile2LeftAnim
+	ld a, 1
+	ld [ENEMY1_VARS + ENEMY_ACTIVE], a
+	ld a, ENEMY_ACTION_WALK_LEFT
+	ld [ENEMY1_VARS + ENEMY_ACTION], a
+	SpriteEnemyClear SPRITE_ENEMY1, OAM_ENEMY1
+;	MonkIdleAnim SPRITE_ENEMY1, ENEMY1_ANIM
 	
 Main:
 	halt
@@ -98,6 +104,7 @@ Main:
 	call UpdateProjectiles
 	call PlayerMove
 	call PlayerAnim
+	call EnemyActAll
 	call CameraFollow
 	call SpriteAnimAll
 	call SpriteUpdateAll

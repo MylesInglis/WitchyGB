@@ -245,10 +245,44 @@ PlayerProjectile2LeftAnim: MACRO
 	SpriteAnimStart SPRITE_PLAYER_PROJECTILE2, PLAYER_PROJECTILE2_ANIM, PLAYER_PROJECTILE_ANIM_START, PLAYER_PROJECTILE_ANIM_END, PLAYER_PROJECTILE_ANIM_LEFT
 	ENDM
 	
+;1 - Metasprite address
+;2 - Animation data address
+MonkIdleAnim: MACRO
+	ld a, 2
+	SpriteAnimStart \1, \2, MONK_ANIM_IDLE_START, MONK_ANIM_IDLE_END, MONK_ANIM_IDLE
+	ENDM
+	
+;1 - Metasprite address
+;2 - Animation data address
+MonkWalkLeftAnim: MACRO
+	xor a
+	SpriteAnimStart \1, \2, MONK_ANIM_WALK_START, MONK_ANIM_WALK_END, MONK_ANIM_WALK
+	ENDM
+
+;1 - Metasprite address
+;2 - Animation data address	
+MonkWalkRightAnim: MACRO
+	ld a, 1
+	SpriteAnimStart \1, \2, MONK_ANIM_WALK_START, MONK_ANIM_WALK_END, MONK_ANIM_WALK
+	ENDM
+	
+;1 - Metasprite address
+;2 - Animation data address
+MonkJumpAnim: MACRO
+	ld a, 2
+	SpriteAnimStart \1, \2, MONK_ANIM_JUMP_START, MONK_ANIM_JUMP_END, MONK_ANIM_JUMP
+	ENDM
+	
+;1 - Metasprite address
+;2 - Animation data address
+MonkFireAnim: MACRO
+	ld a, 2
+	SpriteAnimStart \1, \2, MONK_ANIM_FIRE_START, MONK_ANIM_FIRE_END, MONK_ANIM_FIRE
+	ENDM
+	
 ;in: b - x movement
 ;    c - y movement
 ;1 - Metasprite address
-	
 SpriteMove: MACRO
 	ld a, b
 	or a
@@ -290,4 +324,20 @@ SpriteMove: MACRO
 	sub a, c
 	ld [\1 + METASPRITE_Y], a
 .end\@
+	ENDM
+	
+;1 - Metasprite address
+;2 - OAM buffer location
+SpriteEnemyClear: MACRO
+	xor a
+	ld [\1 + METASPRITE_Y], a
+	ld [\2], a
+	ld [\2 + SPRITE_STRUCT_SIZE], a
+	ld [\2 + SPRITE_STRUCT_SIZE * 2], a
+	ld [\2 + SPRITE_STRUCT_SIZE * 3], a
+	ld [\2 + SPRITE_STRUCT_SIZE * 4], a
+	ld [\2 + SPRITE_STRUCT_SIZE * 5], a
+	ld [\2 + SPRITE_STRUCT_SIZE * 6], a
+	ld [\2 + SPRITE_STRUCT_SIZE * 7], a
+	ld [\2 + SPRITE_STRUCT_SIZE * 8], a
 	ENDM
