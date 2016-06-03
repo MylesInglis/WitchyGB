@@ -82,11 +82,11 @@ HandleInput:
 	bit 7, a
 	jr z, .jump
 	;check below tiles for ground
-	CheckBelowTile 1
-	CheckBelowTile 2
-	CheckBelowTile 3
-	CheckBelowTile 4
-	CheckBelowTile 5
+	CheckBelowTile 1, SPRITE_PLAYER, .jumpdown
+	CheckBelowTile 2, SPRITE_PLAYER, .jumpdown
+	CheckBelowTile 3, SPRITE_PLAYER, .jumpdown
+	CheckBelowTile 4, SPRITE_PLAYER, .jumpdown
+	CheckBelowTile 5, SPRITE_PLAYER, .jumpdown
 	;if no floor found
 	jr .fire
 .jump
