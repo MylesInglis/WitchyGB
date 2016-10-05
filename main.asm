@@ -1,7 +1,8 @@
 INCLUDE "sprite.asm"
-INCLUDE "input.asm"
 INCLUDE "scroll.asm"
 INCLUDE "collision.asm"
+INCLUDE "playerenemy.asm"
+INCLUDE "input.asm"
 INCLUDE "player.asm"
 INCLUDE "enemy.asm"
 INCLUDE "gyal.asm"
@@ -101,7 +102,7 @@ Main:
 	
 	call GetInput
 	call HandleInput
-	call PlayerMove
+	PlayerEnemyMove PLAYER_VARS, SPRITE_PLAYER, PLAYER, PLAYER_WALK_VEL
 	call PlayerAnim
 	call EnemyActAll
 	call UpdateProjectiles
@@ -110,11 +111,11 @@ Main:
 	call SpriteUpdateAll
 	call GyalUpdate
 	
-	ld a, [PLAYER_DEAD]
+	ld a, [PLAYER_VARS + PLAYER_DEAD]
 	or a
 	jr nz, .restart
 	
-	jr Main
+	jp Main
 	
 .restart
 	jp Begin

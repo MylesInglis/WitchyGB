@@ -232,7 +232,7 @@ EnemyAct: MACRO
 	
 ;1 - Enemy struct address
 ;2 - Metasprite address
-EnemyMove: MACRO
+EnemyMoveOLD: MACRO
 	ld a, [\1 + ENEMY_GRAVITY_COUNTER]
 	inc a
 	cp GRAVITY

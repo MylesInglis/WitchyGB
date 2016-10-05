@@ -75,7 +75,7 @@ HandleInput:
 	ld a, [INPUT_ON]
 	bit 0, a
 	jp z, .fire
-	ld a, [PLAYER_ON_FLOOR]
+	ld a, [PLAYER_VARS + PLAYER_ON_FLOOR]
 	or a
 	jp z, .fire
 	ld a, [INPUT]
@@ -94,36 +94,36 @@ HandleInput:
 	ld a, 0
 	call GyalSFXPlay
 	ld a, PLAYER_JUMP_VEL
-	ld [PLAYER_YVEL], a
+	ld [PLAYER_VARS + PLAYER_YVEL], a
 	xor a
-	ld [GRAVITY_COUNTER], a
-	ld [PLAYER_ON_FLOOR], a
+	ld [PLAYER_VARS + PLAYER_GRAVITY_COUNTER], a
+	ld [PLAYER_VARS + PLAYER_ON_FLOOR], a
 	jr .fire
 .jumpdown
 	ld a, [SPRITE_PLAYER + METASPRITE_Y]
 	inc a
 	ld [SPRITE_PLAYER + METASPRITE_Y], a
 	xor a
-	ld [GRAVITY_COUNTER], a
-	ld [PLAYER_ON_FLOOR], a
+	ld [PLAYER_VARS + PLAYER_GRAVITY_COUNTER], a
+	ld [PLAYER_VARS + PLAYER_ON_FLOOR], a
 .fire
 	ld a, [INPUT_ON]
 	bit 1, a
 	jr z, .scrollleft
-	call FireProjectile
+	call PlayerFireProjectile
 .scrollleft
 	ld a, [INPUT]
 	bit 5, a
 	jr z, .scrollright
 	ld a, PLAYER_WALK_VEL
 	set 7, a
-	ld [PLAYER_XVEL], a
+	ld [PLAYER_VARS + PLAYER_XVEL], a
 .scrollright
 	ld a, [INPUT]
 	bit 4, a
 	jr z, .playpause
 	ld a, PLAYER_WALK_VEL
-	ld [PLAYER_XVEL], a
+	ld [PLAYER_VARS + PLAYER_XVEL], a
 .playpause
 	ld a, [INPUT_ON]
 	bit 3, a
@@ -140,12 +140,12 @@ HandleInput:
 	bit 5, a
 	jr z, .rightoff
 	xor a
-	ld [PLAYER_XVEL], a
+	ld [PLAYER_VARS + PLAYER_XVEL], a
 .rightoff
 	ld a, [INPUT_OFF]
 	bit 4, a
 	jr z, .end
 	xor a
-	ld [PLAYER_XVEL], a
+	ld [PLAYER_VARS + PLAYER_XVEL], a
 .end
 	ret
