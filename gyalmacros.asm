@@ -850,13 +850,29 @@ VolEnvelope: MACRO
 ;2 - Flag to check
 ;3 - Replacement data
 ;4 - Jump point
+;5 - 1 if wave high, 0 otherwise
 ;out - b = 1 if replaced, 0 if not
 CheckChannel: MACRO
 	ld a, \2
 	or a
 	jr z, .end\@
+IF \5 == 1
+	ld a, \3
+	and %10000000
+	jr z, .notrig\@
+	xor a
+	ld [rAUD3ENA], a
 	ld a, \3
 	ld \1, a
+	ld a, %10000000
+	ld [rAUD3ENA], a
+.notrig\@
+	ld a, \3
+	ld \1, a
+ELSE
+	ld a, \3
+	ld \1, a
+ENDC	
 	xor a
 	ld \2, a
 	ld b, 1
@@ -873,7 +889,7 @@ CheckSFXChannel: MACRO
 	ld a, [GYAL_SFX_CHANNELS + (GYAL_SFX_STRUCT_SIZE * \1) + GYAL_SFX_ENABLED]
 	or a
 	jr z, .end\@
-	CheckChannel [\2], [GYAL_SFX_CHANNELS + (GYAL_SFX_STRUCT_SIZE * \1) + GYAL_SFX_FLAGS + \3], [GYAL_SFX_CHANNELS + (GYAL_SFX_STRUCT_SIZE * \1) + GYAL_SFX_BUF + \3], \4
+	CheckChannel [\2], [GYAL_SFX_CHANNELS + (GYAL_SFX_STRUCT_SIZE * \1) + GYAL_SFX_FLAGS + \3], [GYAL_SFX_CHANNELS + (GYAL_SFX_STRUCT_SIZE * \1) + GYAL_SFX_BUF + \3], \4, \2 == rAUD3HIGH
 .end\@
 	ENDM
 	
