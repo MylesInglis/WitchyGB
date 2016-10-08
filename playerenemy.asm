@@ -143,7 +143,7 @@ PlayerEnemyMove: MACRO
 	ld a, [\2 + METASPRITE_Y]
 	cp SCRN_Y + 50
 	jr nc, .dead\@
-IF	\3 == 1
+IF	\3 == ENEMY
 	ld a, [\2 + METASPRITE_X]
 	cp SCRN_X + 30
 	jr c, .end\@

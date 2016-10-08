@@ -44,6 +44,8 @@ PlayerInit:
 	ret
 	
 PlayerFireProjectile:
+	ld a, PROJECTILE_LIFE
+	ld b, a
 	FireProjectile PLAYER_VARS + PLAYER_PROJECTILE1_LIFE, PLAYER_VARS + PLAYER_PROJECTILE2_LIFE, SPRITE_PLAYER, SPRITE_PLAYER_PROJECTILE1, SPRITE_PLAYER_PROJECTILE2, PlayerProjectile1LeftAnim, PlayerProjectile1RightAnim, PlayerProjectile2LeftAnim, PlayerProjectile2RightAnim
 	or a
 	jr nz, .nofire
@@ -55,7 +57,7 @@ PlayerFireProjectile:
 .nofire
 	ret
 	
-UpdateProjectiles:
+UpdateProjectilesOLD:
 	ld a, [PLAYER_VARS + PLAYER_PROJECTILE1_LIFE]
 	or a
 	jr z, .killproj1

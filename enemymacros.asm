@@ -117,8 +117,13 @@ EnemyThink: MACRO
 .monkjumpdown\@
 	ld a, ENEMY_ACTION_JUMP_DOWN
 	ld [\1 + ENEMY_ACTION], a
-	jr .end\@
+	jp .end\@
 .monkfire\@
+	ld a, ENEMY_PROJECTILE_LIFE
+	ld b, a
+	FireProjectile ENEMY_PROJECTILE1_LIFE, ENEMY_PROJECTILE2_LIFE, \2, SPRITE_ENEMY_PROJECTILE1, SPRITE_ENEMY_PROJECTILE2, EnemyProjectile1RightAnim, EnemyProjectile1LeftAnim, EnemyProjectile2RightAnim, EnemyProjectile2LeftAnim
+	or a
+	jp nz, .monkwalk\@
 	ld a, ENEMY_ACTION_FIRE
 	ld [\1 + ENEMY_ACTION], a
 	ld a, ENEMY_MONK_FIRE_ANIM_TIME
@@ -230,130 +235,3 @@ EnemyAct: MACRO
 .end\@
 	ENDM
 	
-;1 - Enemy struct address
-;2 - Metasprite address
-EnemyMoveOLD: MACRO
-	ld a, [\1 + ENEMY_GRAVITY_COUNTER]
-	inc a
-	cp GRAVITY
-	jr z, .gravity\@
-	ld [\1 + ENEMY_GRAVITY_COUNTER], a
-	jr .move\@
-.gravity\@
-	xor a
-	ld [\1 + ENEMY_GRAVITY_COUNTER], a
-	ld a, [\1 + ENEMY_YVEL]
-	bit 7, a
-	jr z, .positive\@
-.negative\@
-	dec a
-	bit 7, a
-	jr z, .zero\@
-	jr .applygravity\@
-.zero\@
-	xor a
-	jr .applygravity\@
-.positive\@
-	inc a
-	cp TERMINAL_VEL
-	jr c, .applygravity\@
-	ld a, TERMINAL_VEL
-.applygravity\@
-	ld [\1 + ENEMY_YVEL], a
-.move\@
-	ld a, [\1 + ENEMY_YVEL]
-	ld c, a
-	ld a, [\1 + ENEMY_XVEL]
-	ld b, a
-;	jr .noboundary\@
-	bit 7, b
-	jr z, .right\@
-.left\@
-	ld a, [SCROLL_CURRENT_MAP_COLUMN]
-	sub SCRN_VX_B
-	or a
-	jr nz, .noboundary\@
-	ld a, [rSCX]
-	or a
-	jr nz, .noboundary\@
-	ld a, [\2 + METASPRITE_X]
-	cp ENEMY_MONK_SPEED + 6
-	jr nc, .noboundary\@
-	xor a
-	ld [\1 + ENEMY_XVEL], a
-	ld b, a
-	jr .noboundary\@
-.right\@
-	ld a, [SCROLL_MAP_SIZE]
-	ld d, a
-	ld a, [SCROLL_CURRENT_MAP_COLUMN]
-	cp d
-	jr nz, .noboundary\@
-	ld a, [rSCX]
-	cp ($FF - SCRN_X)
-	jr c, .noboundary\@
-	ld a, [\2 + METASPRITE_X]
-	cp ($FF - ENEMY_MONK_SPEED - 106)
-	jr c, .noboundary\@
-	xor a
-	ld [\1 + ENEMY_XVEL], a
-	ld b, a
-.noboundary\@
-	SpriteMove \2
-	ld a, [\1 + ENEMY_YVEL]
-	bit 7, a
-	jr nz, .checkalive\@
-	or a
-	jr z, .checkalive\@
-	ld a, [\2 + METASPRITE_X]
-	add a, 4
-	ld b, a
-	ld a, [\2 + METASPRITE_Y]
-	add a, 8
-	ld c, a
-	call CheckWorldCollision
-	or a
-	jr z, .inair\@
-.stop\@
-	ld a, [rSCY]
-	ld b, a
-	ld a, [\2 + METASPRITE_Y]
-	add b
-	ld d, a
-	and %11111000 ;set to previous multiple of 8 in world pos
-	ld e, a
-	ld a, [\1 + ENEMY_ON_FLOOR]
-	and a
-	jr nz, .skip\@
-	ld a, d ;make sure player collided this frame
-	sub e
-	ld d, a
-	ld a, [\1 + ENEMY_YVEL]
-	cp d
-	jr c, .inair\@
-.skip\@
-	ld a, e
-	sub b ;back to screen pos
-	ld [\2 + METASPRITE_Y], a
-	xor a
-	ld [\1 + ENEMY_YVEL], a
-	ld a, 1
-	ld [\1 + ENEMY_ON_FLOOR], a
-	jr .checkalive\@
-.inair\@
-	xor a
-	ld [\1 + ENEMY_ON_FLOOR], a
-.checkalive\@
-	ld a, [\2 + METASPRITE_Y]
-	cp SCRN_Y + 50
-	jr nc, .dead\@
-	ld a, [\2 + METASPRITE_X]
-	cp SCRN_X + 30
-	jr c, .end\@
-	cp SCRN_X + 40
-	jr nc, .end\@
-.dead\@
-	ld a, 1
-	ld [\1 + ENEMY_DEAD], a
-.end\@
-	ENDM
