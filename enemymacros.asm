@@ -124,6 +124,9 @@ EnemyThink: MACRO
 	FireProjectile ENEMY_PROJECTILE1_LIFE, ENEMY_PROJECTILE2_LIFE, \2, SPRITE_ENEMY_PROJECTILE1, SPRITE_ENEMY_PROJECTILE2, EnemyProjectile1RightAnim, EnemyProjectile1LeftAnim, EnemyProjectile2RightAnim, EnemyProjectile2LeftAnim
 	or a
 	jp nz, .monkwalk\@
+	ld hl, EnemyFireSFX
+	xor a
+	call GyalSFXPlay
 	ld a, ENEMY_ACTION_FIRE
 	ld [\1 + ENEMY_ACTION], a
 	ld a, ENEMY_MONK_FIRE_ANIM_TIME

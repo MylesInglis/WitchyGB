@@ -89,7 +89,7 @@ SECTION "GYAL Code", HOME
 
 GyalInit:
     ld a, $FF
-	ld a, %01110111
+	ld a, %11111111
 	ld [rAUDTERM], a
 	xor a
 	ld hl, GYAL_OUT_BUF
