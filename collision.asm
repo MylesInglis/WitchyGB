@@ -57,6 +57,7 @@ CheckWorldCollision:
 	ld d, h
 	ld hl, _SCRN0
 	add hl, de
+	lcd_WaitVRAM
 	ld a, [HL]
 	cp FLOOR_TILE_MIN
 	jr c, .nofloor
